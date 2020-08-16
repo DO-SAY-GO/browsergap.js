@@ -5,24 +5,26 @@ class BrowserGapAPI {
     this.apiKey = apiKey;
   }
 
-  openSecurely(url) {
+  async openSecurely(url) {
     const {apiKey} = this;
 
     const portal = window.open('about:blank');
 
-    const {browserUrl, err} = await fetch(SERVICE('new.browser'), {
+    const {loginUrl, err} = await fetch(SERVICE('new.browser'), {
       method: 'POST',
-      content-type: 'application/json',
-      body: {
+      headers: {
+        ['content-type']: 'application/json',
+      },
+      body: JSON.stringify({
         url, 
         apiKey
-      }
+      })
     }).then(r => r.json());
 
     if ( err ) {
       throw err;
     } else {
-      portal.location = browserUrl;
+      portal.location = loginUrl;
     }
   }
 };
